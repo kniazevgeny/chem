@@ -1,0 +1,37 @@
+[
+	{
+		"file": "D:\\\\Files\\\\Documents\\\\Unreal Projects\\\\sPawn\\\\Source\\\\sPawn\\\\MyActor2.cpp",
+		"command": "cl.exe @\"D:\\Files\\Documents\\Unreal Projects\\sPawn\\.vscode\\compileCommands_sPawn\\sPawn.182.rsp\"",
+		"directory": "D:\\Program Files\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "D:\\\\Files\\\\Documents\\\\Unreal Projects\\\\sPawn\\\\Source\\\\sPawn\\\\MyActor2.h",
+		"command": "cl.exe @\"D:\\Files\\Documents\\Unreal Projects\\sPawn\\.vscode\\compileCommands_sPawn\\sPawn.182.rsp\"",
+		"directory": "D:\\Program Files\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "D:\\\\Files\\\\Documents\\\\Unreal Projects\\\\sPawn\\\\Source\\\\sPawn\\\\sPawn.Build.cs",
+		"command": "cl.exe @\"D:\\Files\\Documents\\Unreal Projects\\sPawn\\.vscode\\compileCommands_sPawn\\sPawn.182.rsp\"",
+		"directory": "D:\\Program Files\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "D:\\\\Files\\\\Documents\\\\Unreal Projects\\\\sPawn\\\\Source\\\\sPawn\\\\sPawn.cpp",
+		"command": "cl.exe @\"D:\\Files\\Documents\\Unreal Projects\\sPawn\\.vscode\\compileCommands_sPawn\\sPawn.182.rsp\"",
+		"directory": "D:\\Program Files\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "D:\\\\Files\\\\Documents\\\\Unreal Projects\\\\sPawn\\\\Source\\\\sPawn\\\\sPawn.h",
+		"command": "cl.exe @\"D:\\Files\\Documents\\Unreal Projects\\sPawn\\.vscode\\compileCommands_sPawn\\sPawn.182.rsp\"",
+		"directory": "D:\\Program Files\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "D:\\\\Files\\\\Documents\\\\Unreal Projects\\\\sPawn\\\\Source\\\\sPawn\\\\sPawnGameModeBase.cpp",
+		"command": "cl.exe @\"D:\\Files\\Documents\\Unreal Projects\\sPawn\\.vscode\\compileCommands_sPawn\\sPawn.182.rsp\"",
+		"directory": "D:\\Program Files\\UE_4.26\\Engine\\Source"
+	},
+	{
+		"file": "D:\\\\Files\\\\Documents\\\\Unreal Projects\\\\sPawn\\\\Source\\\\sPawn\\\\sPawnGameModeBase.h",
+		"command": "cl.exe @\"D:\\Files\\Documents\\Unreal Projects\\sPawn\\.vscode\\compileCommands_sPawn\\sPawn.182.rsp\"",
+		"directory": "D:\\Program Files\\UE_4.26\\Engine\\Source"
+	}
+]

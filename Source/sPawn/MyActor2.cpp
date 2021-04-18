@@ -11,6 +11,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <string>
 
 
 std::string prev = "";
@@ -35,7 +36,7 @@ void AMyActor2::SpawnObject(FVector Loc, FRotator Rot)
 
 int findRoot(std::string s) {
 	std::string names[20] = { "meth", "eth", "prop", "but", "pent", "hex", "hept", "oct", "non", "dec", "undec", "dodec", "tridec", "tetradec", "pentadec", "hexadec", "heptadec", "octadec", "nonadec", "icos" };
-	//"мет", "эт", "проп" , "бут" , "пент" , "гекс" , "гепт" , "окт" , "нон" , "дек"
+	//"пїЅпїЅпїЅ", "пїЅпїЅ", "пїЅпїЅпїЅпїЅ" , "пїЅпїЅпїЅ" , "пїЅпїЅпїЅпїЅ" , "пїЅпїЅпїЅпїЅ" , "пїЅпїЅпїЅпїЅ" , "пїЅпїЅпїЅ" , "пїЅпїЅпїЅ" , "пїЅпїЅпїЅ"
 	//std::locale::global(std::locale(""));
 	std::vector<int> iters(s.size());
 	for (int i = 0; i < 20; i++) {
@@ -107,7 +108,8 @@ void AMyActor2::Tick(float DeltaTime)
 	if (prev != compound_string) {
 		Spawning(count, { -600.f, prevRow * -300.f, 200.f }, 90.f);
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("compound=%f"), count + 0.f));
-		GEngine->AddOnScreenDebugMessage(-1, 50.f, FColor::Red, TEXT("кекаем"));
+		GEngine->AddOnScreenDebugMessage(-1, 50.f, FColor::Red, TEXT("WAT"));
+		//пїЅпїЅпїЅпїЅпїЅпїЅ
 		prevRow++;
 		prev = compound_string;
 	}
