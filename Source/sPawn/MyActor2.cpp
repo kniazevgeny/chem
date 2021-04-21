@@ -17,7 +17,6 @@
 std::string prev = "";
 int prevRow = 2;
 
-
 AMyActor2::AMyActor2()
 {
 	//int log = std::stoi(names[0]);
@@ -31,7 +30,29 @@ void AMyActor2::SpawnObject(FVector Loc, FRotator Rot)
 {
 	FActorSpawnParameters SpawnParams;
 	//SpawnParams.Name = "a";
-	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(CubeClass, { Loc.X , Loc.Y, Loc.Z }, Rot, SpawnParams);
+	// ConstructorHelpers::FClassFinder<AActor> carbonObj(TEXT("/Game/Blueprints/Carbon"));
+	UObject* SpawnActor = Cast<UObject>(StaticLoadObject(UObject::StaticClass(), NULL, TEXT("/Game/Blueprints/Carbon.Carbon")));
+
+	UBlueprint* GeneratedBP = Cast<UBlueprint>(SpawnActor);
+	if (!SpawnActor)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("CANT FIND OBJECT TO SPAWN")));
+		return;
+	}
+
+	UClass* SpawnClass = SpawnActor->StaticClass();
+	if (SpawnClass == NULL)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("CLASS == NULL")));
+		return;
+	}
+	// if (carbonObj.Succeeded()) {
+		// GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("Found a class=%s"), carbonObj.Class));
+	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(GeneratedBP->GeneratedClass, { Loc.X , Loc.Y, Loc.Z }, Rot, SpawnParams);
+	// }
+	// else {
+	// 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("Failed to find /Game/Blueprints/Carbon.Carbon_C")));
+	// }
 }
 
 int findRoot(std::string s) {
@@ -59,7 +80,7 @@ void AMyActor2::BeginPlay()
 	std::string compound_string(TCHAR_TO_UTF8(*compound));
 	int count = findRoot(compound_string);
 	//GEngine->AddOnScreenDebugMessage(-1, 50.f, FColor::Red, FString::Printf(TEXT("a= %i"), count));
-	
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, FString::Printf(TEXT("Добро пожаловать в АД")));
 	float prevX = -500.f, prevY = 0.f;
 	Spawning(count, { -500.f, 0.f, 0.f }, angle);
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("Angle is: %s"), log.ToString()));	
