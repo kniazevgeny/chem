@@ -29,9 +29,7 @@ AMyActor2::AMyActor2()
 void AMyActor2::SpawnObject(FVector Loc, FRotator Rot)
 {
 	FActorSpawnParameters SpawnParams;
-	//SpawnParams.Name = "a";
-	// ConstructorHelpers::FClassFinder<AActor> carbonObj(TEXT("/Game/Blueprints/Carbon"));
-	UObject* SpawnActor = Cast<UObject>(StaticLoadObject(UObject::StaticClass(), NULL, TEXT("/Game/Blueprints/Carbon.Carbon")));
+	UObject* SpawnActor = Cast<UObject>(StaticLoadObject(UObject::StaticClass(), NULL, TEXT("/Game/Blueprints/Oxygen.Oxygen")));
 
 	UBlueprint* GeneratedBP = Cast<UBlueprint>(SpawnActor);
 	if (!SpawnActor)
@@ -46,13 +44,7 @@ void AMyActor2::SpawnObject(FVector Loc, FRotator Rot)
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("CLASS == NULL")));
 		return;
 	}
-	// if (carbonObj.Succeeded()) {
-		// GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("Found a class=%s"), carbonObj.Class));
 	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(GeneratedBP->GeneratedClass, { Loc.X , Loc.Y, Loc.Z }, Rot, SpawnParams);
-	// }
-	// else {
-	// 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("Failed to find /Game/Blueprints/Carbon.Carbon_C")));
-	// }
 }
 
 int findRoot(std::string s) {
