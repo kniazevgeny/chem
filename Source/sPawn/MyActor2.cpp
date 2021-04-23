@@ -12,10 +12,17 @@
 #include <algorithm>
 #include <cmath>
 #include <string>
+#include <map>
 
 
 std::string prev = "";
 int prevRow = 2;
+std::vector<AActor*> ActorsList;
+std::map<int, std::vector<int>> AdjacencyList;
+
+FVector circleFocus = {0.f, 0.f, 20.f};
+int circleRadius = 100;
+float circleAngle = 0;
 
 AMyActor2::AMyActor2()
 {
@@ -45,6 +52,10 @@ void AMyActor2::SpawnObject(FVector Loc, FRotator Rot)
 		return;
 	}
 	AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(GeneratedBP->GeneratedClass, { Loc.X , Loc.Y, Loc.Z }, Rot, SpawnParams);
+	ActorsList.push_back(SpawnedActorRef);
+	if (ActorsList.size() == 21)
+		circleFocus = SpawnedActorRef->GetActorLocation();
+
 }
 
 int findRoot(std::string s) {
@@ -126,6 +137,11 @@ void AMyActor2::Tick(float DeltaTime)
 		prevRow++;
 		prev = compound_string;
 	}
-
+	if (ActorsList.size() >= 30) {
+		circleAngle += DeltaTime;
+		float circleX = sin(circleAngle) * circleRadius, circleY = cos(circleAngle) * circleRadius;
+		FVector resultLocation = {circleFocus.X + circleX, circleFocus.Y + circleY, circleFocus.Z};
+		ActorsList[20]->SetActorLocation(resultLocation);
+	}
 }
 
