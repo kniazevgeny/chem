@@ -101,7 +101,8 @@
 			"xmemory": "cpp",
 			"xstddef": "cpp",
 			"xstring": "cpp",
-			"xtr1common": "cpp"
+			"xtr1common": "cpp",
+			"*.rh": "cpp"
 		}
 	},
 	"extensions": {

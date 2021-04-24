@@ -25,7 +25,7 @@ FVector circleFocus = {0.f, 0.f, 20.f};
 int circleRadius = 100;
 float circleAngle = 0;
 
-std::vector<std::string> elementClassPath = {
+std::vector<FString> elementClassPath = {
 	"",
 	"",
 	"",
@@ -35,7 +35,7 @@ std::vector<std::string> elementClassPath = {
 	"/Game/Blueprints/Carbon.Carbon",
 	"",
 	"/Game/Blueprints/Oxygen.Oxygen"
-}
+};
 
 AMyActor2::AMyActor2()
 {
@@ -51,7 +51,7 @@ void AMyActor2::SpawnObject(FVector Loc, FRotator Rot, int elementIndex)
 	FActorSpawnParameters SpawnParams;
 	// TODO: create an array with classes paths, 
 	// and then choose from them a name by an periodic el number  
-	UObject* SpawnActor = Cast<UObject>(StaticLoadObject(UObject::StaticClass(), NULL, TEXT("/Game/Blueprints/Oxygen.Oxygen")));
+	UObject* SpawnActor = Cast<UObject>(StaticLoadObject(UObject::StaticClass(), NULL, *elementClassPath[elementIndex]));
 	UBlueprint* GeneratedBP = Cast<UBlueprint>(SpawnActor);
 	if (!SpawnActor)
 	{
@@ -87,7 +87,7 @@ int findRoot(std::string s) {
 	//mETHan and ETHan
 }
 
-void RenderAdjacencyList(){
+void AMyActor2::RenderAdjacencyList(){
 	std::vector<bool> visited(AdjacencyList.size());
 	std::queue<int> q;
 	q.push(0);
@@ -98,7 +98,8 @@ void RenderAdjacencyList(){
 		for (auto i: AdjacencyList[v])
 			if (!visited[i])
 				q.push(i);
-		SpawnObject({2.f * 100 * v}, {0.f, 0.f, 0.f}, 6);
+		FRotator r = { 0, 0, 0 };
+		SpawnObject({ 20.f + 100 * v, 400.f, 200.f }, r, 8);
 	}
 }
 
@@ -118,9 +119,10 @@ void AMyActor2::BeginPlay()
 	
 	// Try to create H20 list, and then render it all
 	AdjacencyList.resize(3);
-	AdjacencyList[0] = {2};		//H
-	AdjacencyList[1] = {1, 3};	//O
-	AdjacencyList[2] = {2};		//H
+	AdjacencyList[0] = {1};		//H
+	AdjacencyList[1] = {0, 2};	//O
+	AdjacencyList[2] = {1};		//H
+	RenderAdjacencyList();
 	// need a module which takes H2O, then creates 3 parts, and finally link them up 
 }
 
@@ -137,7 +139,7 @@ void AMyActor2::Spawning(int count, FVector v, float ang) {
 		FRotator r = { 0, 0, 0 };
 		prevX += a;
 		prevY += b;
-		SpawnObject({ prevX + a, prevY + b, 200 }, r, 8);
+		SpawnObject({ prevX + a, prevY + b, 200 }, r, 6);
 	}
 
 	float angleCos = std::cos((ang - 180) * PI / 180.0);
@@ -171,11 +173,11 @@ void AMyActor2::Tick(float DeltaTime)
 		prevRow++;
 		prev = compound_string;
 	}
-	if (ActorsList.size() >= 30) {
-		circleAngle += DeltaTime;
-		float circleX = sin(circleAngle) * circleRadius, circleY = cos(circleAngle) * circleRadius;
-		FVector resultLocation = {circleFocus.X + circleX, circleFocus.Y + circleY, circleFocus.Z};
-		ActorsList[20]->SetActorLocation(resultLocation);
-	}
+	// if (ActorsList.size() >= 30) {
+	// 	circleAngle += DeltaTime;
+	// 	float circleX = sin(circleAngle) * circleRadius, circleY = cos(circleAngle) * circleRadius;
+	// 	FVector resultLocation = {circleFocus.X + circleX, circleFocus.Y + circleY, circleFocus.Z};
+	// 	ActorsList[20]->SetActorLocation(resultLocation);
+	// }
 }
 
