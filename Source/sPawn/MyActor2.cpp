@@ -13,16 +13,29 @@
 #include <cmath>
 #include <string>
 #include <map>
+#include <queue>
 
 
 std::string prev = "";
 int prevRow = 2;
 std::vector<AActor*> ActorsList;
-std::map<int, std::vector<int>> AdjacencyList;
+std::vector<std::vector<int>> AdjacencyList;
 
 FVector circleFocus = {0.f, 0.f, 20.f};
 int circleRadius = 100;
 float circleAngle = 0;
+
+std::vector<std::string> elementClassPath = {
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"/Game/Blueprints/Carbon.Carbon",
+	"",
+	"/Game/Blueprints/Oxygen.Oxygen"
+}
 
 AMyActor2::AMyActor2()
 {
@@ -33,11 +46,12 @@ AMyActor2::AMyActor2()
 }
 
 
-void AMyActor2::SpawnObject(FVector Loc, FRotator Rot)
+void AMyActor2::SpawnObject(FVector Loc, FRotator Rot, int elementIndex)
 {
 	FActorSpawnParameters SpawnParams;
+	// TODO: create an array with classes paths, 
+	// and then choose from them a name by an periodic el number  
 	UObject* SpawnActor = Cast<UObject>(StaticLoadObject(UObject::StaticClass(), NULL, TEXT("/Game/Blueprints/Oxygen.Oxygen")));
-
 	UBlueprint* GeneratedBP = Cast<UBlueprint>(SpawnActor);
 	if (!SpawnActor)
 	{
@@ -55,7 +69,6 @@ void AMyActor2::SpawnObject(FVector Loc, FRotator Rot)
 	ActorsList.push_back(SpawnedActorRef);
 	if (ActorsList.size() == 21)
 		circleFocus = SpawnedActorRef->GetActorLocation();
-
 }
 
 int findRoot(std::string s) {
@@ -74,6 +87,21 @@ int findRoot(std::string s) {
 	//mETHan and ETHan
 }
 
+void RenderAdjacencyList(){
+	std::vector<bool> visited(AdjacencyList.size());
+	std::queue<int> q;
+	q.push(0);
+	while (!q.empty()) {
+		int v = q.front();
+		q.pop();
+		visited[v] = true;
+		for (auto i: AdjacencyList[v])
+			if (!visited[i])
+				q.push(i);
+		SpawnObject({2.f * 100 * v}, {0.f, 0.f, 0.f}, 6);
+	}
+}
+
 // Called when the game starts or when spawned
 void AMyActor2::BeginPlay()
 {
@@ -88,6 +116,12 @@ void AMyActor2::BeginPlay()
 	Spawning(count, { -500.f, 0.f, 0.f }, angle);
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("Angle is: %s"), log.ToString()));	
 	
+	// Try to create H20 list, and then render it all
+	AdjacencyList.resize(3);
+	AdjacencyList[0] = {2};		//H
+	AdjacencyList[1] = {1, 3};	//O
+	AdjacencyList[2] = {2};		//H
+	// need a module which takes H2O, then creates 3 parts, and finally link them up 
 }
 
 void AMyActor2::Spawning(int count, FVector v, float ang) {
@@ -103,7 +137,7 @@ void AMyActor2::Spawning(int count, FVector v, float ang) {
 		FRotator r = { 0, 0, 0 };
 		prevX += a;
 		prevY += b;
-		SpawnObject({ prevX + a, prevY + b, 200 }, r);
+		SpawnObject({ prevX + a, prevY + b, 200 }, r, 8);
 	}
 
 	float angleCos = std::cos((ang - 180) * PI / 180.0);

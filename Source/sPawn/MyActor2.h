@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <string>
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
@@ -39,7 +40,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	void SpawnObject(FVector Loc, FRotator Rot);
+	void SpawnObject(FVector Loc, FRotator Rot, int elementIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
 	void Spawning(int count, FVector v, float ang);
