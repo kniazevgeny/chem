@@ -20,13 +20,13 @@ std::vector<AActor *> ActorsList;
 std::vector<std::vector<int>> AdjacencyList;
 
 FVector circleFocus = {0.f, 0.f, 20.f};
-int circleRadius = 100;
+int circleRadius = 175;
 float circleAngle = 0;
 
 std::vector<FString> elementClassPath = {
     "",
-    "/Game/Blueprints/Hydrogen.Hydrogen",
-    "/Game/Blueprints/Helium.Helium",
+    "Blueprint'/Game/Blueprints/Hydrogen.Hydrogen'",
+    "Blueprint'/Game/Blueprints/Helium.Helium'",
     "/Game/Blueprints/Lithium.Lithium",
     "/Game/Blueprints/Beryllium.Beryllium",
     "/Game/Blueprints/Boron.Boron",
@@ -63,7 +63,7 @@ AMyActor2::AMyActor2()
 
 void AMyActor2::SpawnObject(FVector Loc, FRotator Rot, int elementIndex)
 {
-  BPEvent_TestCall(1);
+  //BPEvent_TestCall(1);
   FActorSpawnParameters SpawnParams;
   // TODO: create an array with classes paths,
   // and then choose from them a name by an periodic el number
@@ -82,9 +82,8 @@ void AMyActor2::SpawnObject(FVector Loc, FRotator Rot, int elementIndex)
     return;
   }
   AActor *SpawnedActorRef = GetWorld()->SpawnActor<AActor>(GeneratedBP->GeneratedClass, {Loc.X, Loc.Y, Loc.Z}, Rot, SpawnParams);
-  BPEvent_TestCall(2);
   ActorsList.push_back(SpawnedActorRef);
-  if (ActorsList.size() == 21)
+  if (ActorsList.size() == 3)
     circleFocus = SpawnedActorRef->GetActorLocation();
 }
 
@@ -182,11 +181,11 @@ static TAutoConsoleVariable<FString> C(
     ECVF_SetByConsole);
 
 // Called every frame
-/*void AMyActor2::Tick(float DeltaTime)
+void AMyActor2::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	//Spawning(8, { -700.f, -200.f, 200.f });
-	std::string compound_string(TCHAR_TO_UTF8(*C.GetValueOnGameThread()));
+	/*std::string compound_string(TCHAR_TO_UTF8(*C.GetValueOnGameThread()));
 	int count = 8; //int count = FindRoot(C.GetValueOnGameThread());
 	if (prev != compound_string)
 	{
@@ -197,13 +196,12 @@ static TAutoConsoleVariable<FString> C(
 		prevRow++;
 		prev = compound_string;
 	}
-	if (ActorsList.size() > 40)
+	*/
+	if (ActorsList.size() > 2)
 	{
-		circleAngle += DeltaTime;
+		circleAngle += DeltaTime / 1.5;
 		float circleX = sin(circleAngle) * circleRadius, circleY = cos(circleAngle) * circleRadius;
 		FVector resultLocation = {circleFocus.X + circleX, circleFocus.Y + circleY, circleFocus.Z};
-		//ActorsList[40]->SetActorLocation(resultLocation);
+		ActorsList[2]->SetActorLocation(resultLocation);
 	}
-	
 }
-*/

@@ -54,7 +54,7 @@ protected:
 
 public:	
 	// Called every frame
-	// virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Event", meta = (DisplayName = "TestCall")) 
 	void BPEvent_TestCall(const int s);
