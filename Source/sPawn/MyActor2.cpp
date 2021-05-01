@@ -27,14 +27,14 @@ std::vector<FString> elementClassPath = {
     "",
     "Blueprint'/Game/Blueprints/Hydrogen.Hydrogen'",
     "Blueprint'/Game/Blueprints/Helium.Helium'",
-    "/Game/Blueprints/Lithium.Lithium",
-    "/Game/Blueprints/Beryllium.Beryllium",
-    "/Game/Blueprints/Boron.Boron",
-    "/Game/Blueprints/Carbon.Carbon",
-    "/Game/Blueprints/Nitrogen.Nitrogen",
-    "/Game/Blueprints/Oxygen.Oxygen",
-    "/Game/Blueprints/Fluorine.Fluorine",
-    "/Game/Blueprints/Neon.Neon"
+    "Blueprint'/Game/Blueprints/Lithium.Lithium'",
+    "Blueprint'/Game/Blueprints/Beryllium.Beryllium'",
+    "Blueprint'/Game/Blueprints/Boron.Boron'",
+    "Blueprint'/Game/Blueprints/Carbon.Carbon'",
+    "Blueprint'/Game/Blueprints/Nitrogen.Nitrogen'",
+    "Blueprint'/Game/Blueprints/Oxygen.Oxygen'",
+    "Blueprint'/Game/Blueprints/Fluorine.Fluorine'",
+    "Blueprint'/Game/Blueprints/Neon.Neon'"
 
 };
 
@@ -63,7 +63,7 @@ AMyActor2::AMyActor2()
 
 void AMyActor2::SpawnObject(FVector Loc, FRotator Rot, int elementIndex)
 {
-  //BPEvent_TestCall(1);
+  //BPEvent_TestCall(elementIndex);
   FActorSpawnParameters SpawnParams;
   // TODO: create an array with classes paths,
   // and then choose from them a name by an periodic el number
@@ -162,7 +162,7 @@ void AMyActor2::Spawning(int count, FVector v, float ang)
     FRotator r = {0, 0, 0};
     prevX += a;
     prevY += b;
-    SpawnObject({prevX + a, prevY + b, 200}, r, i % 3 + 2);
+    SpawnObject({prevX + a, prevY + b, 200}, r, i % 10 + 1);
   }
 
   float angleCos = std::cos((ang - 180) * PI / 180.0);
@@ -181,11 +181,11 @@ static TAutoConsoleVariable<FString> C(
     ECVF_SetByConsole);
 
 // Called every frame
-void AMyActor2::Tick(float DeltaTime)
+/*void AMyActor2::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	//Spawning(8, { -700.f, -200.f, 200.f });
-	/*std::string compound_string(TCHAR_TO_UTF8(*C.GetValueOnGameThread()));
+	std::string compound_string(TCHAR_TO_UTF8(*C.GetValueOnGameThread()));
 	int count = 8; //int count = FindRoot(C.GetValueOnGameThread());
 	if (prev != compound_string)
 	{
@@ -196,7 +196,7 @@ void AMyActor2::Tick(float DeltaTime)
 		prevRow++;
 		prev = compound_string;
 	}
-	*/
+	
 	if (ActorsList.size() > 2)
 	{
 		circleAngle += DeltaTime / 1.5;
@@ -204,4 +204,4 @@ void AMyActor2::Tick(float DeltaTime)
 		FVector resultLocation = {circleFocus.X + circleX, circleFocus.Y + circleY, circleFocus.Z};
 		ActorsList[2]->SetActorLocation(resultLocation);
 	}
-}
+}*/
