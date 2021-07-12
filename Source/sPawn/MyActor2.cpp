@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include "ParseMolecule.h"
 #include "MyActor2.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMeshActor.h"
@@ -18,6 +18,9 @@ std::string prev = "";
 int prevRow = 2;
 std::vector<AActor *> ActorsList;
 std::vector<std::vector<int>> AdjacencyList;
+
+std::vector<std::vector<int>> graph;
+std::vector<std::string> decodeInfo;
 
 FVector circleFocus = {0.f, 0.f, 20.f};
 int circleRadius = 175;
@@ -129,8 +132,7 @@ void AMyActor2::RenderAdjacencyList()
 void AMyActor2::BeginPlay()
 {
   Super::BeginPlay();
-  /*//UE_LOG(LogTemp, Warning, TEXT("I just started running"));
-
+  /*
 	int count = 8;//int count = FindRoot(compound);
 	//GEngine->AddOnScreenDebugMessage(-1, 50.f, FColor::Red, FString::Printf(TEXT("a= %i"), count));
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, FString::Printf(TEXT("Добро пожаловать в АД")));
@@ -172,6 +174,31 @@ void AMyActor2::Spawning(int count, FVector v, float ang)
   GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("a=%f b=%f angleCos=%f"), a, b, angleCos));
 }
 
+void AMyActor2::NewMolecule_Implementation()
+{
+    UE_LOG(LogTemp, Warning, TEXT("%s"), *GetClass()->GetName());
+}
+
+TArray<FVectors> AMyActor2::GetMoleculeGraph()
+{
+  TArray<FVectors> arr;
+  arr.SetNum(graph.size());
+  UE_LOG(LogTemp, Warning, TEXT("arr created and resized"));
+  for (size_t i = 0; i < graph.size(); i++)
+  {
+    FVectors f;
+    TArray<int> t;
+    t.SetNum(graph[i].size());
+    for (size_t j = 0; j < graph[i].size(); j++)
+    {
+      t[j] = graph[i][j];
+    };
+    f.Vector = t;
+    arr[i] = f;
+  }
+  return arr;
+}
+
 static TAutoConsoleVariable<FString> C(
     TEXT("C"),
     "octan",
@@ -180,13 +207,31 @@ static TAutoConsoleVariable<FString> C(
             TEXT(">=1: enable debug something\n"),
     ECVF_SetByConsole);
 
+static TAutoConsoleVariable<FString> S(
+    TEXT("S"),
+    "-",
+    TEXT("Well this is just a test debug flag.\n")
+        TEXT("<=0: off \n")
+            TEXT(">=1: enable debug something\n"),
+    ECVF_SetByConsole);
+
 // Called every frame
-/*void AMyActor2::Tick(float DeltaTime)
+void AMyActor2::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-	//Spawning(8, { -700.f, -200.f, 200.f });
-	std::string compound_string(TCHAR_TO_UTF8(*C.GetValueOnGameThread()));
-	int count = 8; //int count = FindRoot(C.GetValueOnGameThread());
+  Super::Tick(DeltaTime);
+  //Spawning(8, { -700.f, -200.f, 200.f });
+  std::string moleculeInp(TCHAR_TO_UTF8(*S.GetValueOnGameThread()));
+  if (prev != moleculeInp && moleculeInp != "-")
+  {
+    UE_LOG(LogTemp, Warning, TEXT("Console variable is here"));
+    tie(graph, decodeInfo) = ParseMolecule(moleculeInp);
+    NewMolecule();
+    GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("decodeInfo.size()=%f"), decodeInfo.size() + 0.f));
+    // size_t -> bp -> for each index get TArray
+    // BuildMolecule(arr);
+    prev = moleculeInp;
+  }
+  /*int count = 8; //int count = FindRoot(C.GetValueOnGameThread());
 	if (prev != compound_string)
 	{
 		Spawning(count, {-600.f, prevRow * -300.f, 200.f}, 90.f);
@@ -203,5 +248,5 @@ static TAutoConsoleVariable<FString> C(
 		float circleX = sin(circleAngle) * circleRadius, circleY = cos(circleAngle) * circleRadius;
 		FVector resultLocation = {circleFocus.X + circleX, circleFocus.Y + circleY, circleFocus.Z};
 		ActorsList[2]->SetActorLocation(resultLocation);
-	}
-}*/
+	}*/
+}

@@ -5,7 +5,21 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
+#include <string>
+#include <map>
+#include <vector>
 #include "MyActor2.generated.h"
+
+
+USTRUCT(BlueprintType)
+struct FVectors
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int> Vector;
+};
+
 
 UCLASS()
 class SPAWN_API AMyActor2 : public AActor
@@ -48,13 +62,20 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
 	void Spawning(int count, FVector v, float ang);
 
+
 	UFUNCTION()
 	int FindRoot(FString s1);
 
 
 public:	
 	// Called every frame
-	// virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void NewMolecule();
+
+	UFUNCTION(BlueprintCallable)
+	TArray<FVectors> GetMoleculeGraph();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Event", meta = (DisplayName = "TestCall")) 
 	void BPEvent_TestCall(const int s);
