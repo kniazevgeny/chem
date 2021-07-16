@@ -10,7 +10,6 @@
 #include <vector>
 #include "MyActor2.generated.h"
 
-
 USTRUCT(BlueprintType)
 struct FVectors
 {
@@ -20,16 +19,25 @@ struct FVectors
 	TArray<int> Vector;
 };
 
+USTRUCT(BlueprintType)
+struct FMolecules
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<AActor *> Elements;
+	TArray<int> Indices;
+};
 
 UCLASS()
 class SPAWN_API AMyActor2 : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 
-	UPROPERTY(EditDefaultsOnly, Category="Spawning")
+	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
 	TSubclassOf<AActor> ActorToSpawn;
 
 	UPROPERTY(EditAnywhere, Category = "Config")
@@ -44,17 +52,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Config")
 	float angle;
 
-
 	AMyActor2();
-
-	
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
-	void SpawnObject(FVector Loc, FRotator Rot, int elementIndex);
+	AActor *SpawnObject(FVector Loc, FRotator Rot, int elementIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
 	void RenderAdjacencyList();
@@ -62,12 +67,16 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Spawning")
 	void Spawning(int count, FVector v, float ang);
 
-
 	UFUNCTION()
 	int FindRoot(FString s1);
 
+	UFUNCTION()
+	void SpawnGraph(int previous, int current, TArray<bool> &visited, TArray<int> &molecule, TArray<AActor *> &elements);
 
-public:	
+	UFUNCTION()
+	int GetAtomIndexByName(FString atom);
+
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -77,6 +86,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<FVectors> GetMoleculeGraph();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Event", meta = (DisplayName = "TestCall")) 
+	UFUNCTION(BlueprintCallable)
+	TArray<FString> GetMoleculeDecodeInfo();
+
+	UFUNCTION(BlueprintCallable)
+	int GetNOfGraph();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Event", meta = (DisplayName = "TestCall"))
 	void BPEvent_TestCall(const int s);
 };

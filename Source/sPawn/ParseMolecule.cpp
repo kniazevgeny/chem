@@ -128,7 +128,7 @@ GetOxidation(std::vector<std::pair<std::string, std::vector<int>>> parts, int sh
   Get real oxidation for each part
 
   Parameters:
-  parts ([('Ca', [2])])
+  parts ([('Ca', [2]), ('Cl', [-1, 1,  3, 4, 5, 6, 7])])...
   should_be (int): Right part of equation. OH- should be -1
   return_real (bool): whether return values to construct molecule or calc oxidation
 
@@ -210,6 +210,7 @@ GetOxidation(std::vector<std::pair<std::string, std::vector<int>>> parts, int sh
 
 std::vector<std::pair<std::string, std::vector<int>>> CountValent(std::string inp) {
   /*
+  Counts possible valants/oxidations for every input' element
   Sapmles: Ca(NO3)2, H2SO4, Cu(OH)2CO3
   Returns: (for MgSO4) {'S': {'oxy': 6, 'count': 1}, 'O': {'oxy': -2, 'count': 4},...}
   */
