@@ -84,6 +84,9 @@ public:
 	void NewMolecule();
 
 	UFUNCTION(BlueprintCallable)
+	void SpawnGraphFromBP(FString input);
+
+	UFUNCTION(BlueprintCallable)
 	TArray<FVectors> GetMoleculeGraph();
 
 	UFUNCTION(BlueprintCallable)

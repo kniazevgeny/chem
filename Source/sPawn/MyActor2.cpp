@@ -191,15 +191,17 @@ void AMyActor2::RenderAdjacencyList()
 
 int AMyActor2::GetAtomIndexByName(FString atom)
 {
-  for (size_t i = 1; i < atomName.size(); i++)  {
-    if (TCHAR_TO_UTF8(*atom) == atomName[i]) return i;
+  for (size_t i = 1; i < atomName.size(); i++)
+  {
+    if (TCHAR_TO_UTF8(*atom) == atomName[i])
+      return i;
   }
   return -1;
 }
 
 std::vector<std::vector<FVector>> positioning = {
     {{0, 0, 0}},                                                                                 // 0
-    {{50, 0, 0}},                                                                               // 1
+    {{50, 0, 0}},                                                                                // 1
     {{158.67068543265904, 121.75221130618945, 0}, {158.67068543265904, -121.75221130618945, 0}}, // 2
     /* 
     a * sin(0.916298), a * sin(0.654498)
@@ -214,7 +216,7 @@ std::vector<std::vector<FVector>> positioning = {
     */
     {{100, 50, 50}, {100, 50, -50}, {100, -50, 50}, {100, -50, -50}}};
 
-void AMyActor2::SpawnGraph(int previous, int current, TArray<bool> &visited, TArray<int> &molecule, TArray<AActor*> &elements)
+void AMyActor2::SpawnGraph(int previous, int current, TArray<bool> &visited, TArray<int> &molecule, TArray<AActor *> &elements)
 {
   // If it's first atom to spawn
   if (previous == -1)
@@ -230,24 +232,27 @@ void AMyActor2::SpawnGraph(int previous, int current, TArray<bool> &visited, TAr
   visited[current] = true;
 
   std::set<int> unique;
-  for (int i:graph[current]) unique.insert(i);
+  for (int i : graph[current])
+    unique.insert(i);
   int neighborsCount = unique.size() - 1; // -1 because 1 of neighbors is already spawned
-  if (!current) neighborsCount += 1;
+  if (!current)
+    neighborsCount += 1;
   // Spawn neighbors
   int j = 0;
   for (int i : graph[current])
   {
-    if (visited[i]) continue;
+    if (visited[i])
+      continue;
     UE_LOG(LogTemp, Warning, TEXT("about to spawn graph[%i]"), i);
     // Get coords of previous
     FVector coordsPrevious = elements[previous]->GetActorLocation();
     FVector coordsCurrent = elements[current]->GetActorLocation();
     FVector previousToCurrent = {coordsPrevious.X - coordsCurrent.X, coordsPrevious.Y - coordsCurrent.Y, coordsPrevious.Z - coordsCurrent.Z};
     FRotator abc = {0, 0, 0}; // How can I do this?
-    UE_LOG(LogTemp, Warning, TEXT("Spawning element x:%i y:%i z:%i"), 
-      static_cast<int>(positioning[neighborsCount][j].X),
-      static_cast<int>(positioning[neighborsCount][j].Y),
-      static_cast<int>(positioning[neighborsCount][j].Z));
+    UE_LOG(LogTemp, Warning, TEXT("Spawning element x:%i y:%i z:%i"),
+           static_cast<int>(positioning[neighborsCount][j].X),
+           static_cast<int>(positioning[neighborsCount][j].Y),
+           static_cast<int>(positioning[neighborsCount][j].Z));
     elements[i] = SpawnObject({coordsCurrent.X + positioning[neighborsCount][j].X, coordsCurrent.Y + positioning[neighborsCount][j].Y, coordsCurrent.Z + positioning[neighborsCount][j].Z}, abc, GetAtomIndexByName(UTF8_TO_TCHAR(decodeInfo[i].c_str())));
     SpawnGraph(current, i, visited, molecule, elements);
     j += 1;
@@ -291,7 +296,7 @@ void AMyActor2::Spawning(int count, FVector v, float ang)
     FRotator r = {0, 0, 0};
     prevX += a;
     prevY += b;
-    SpawnObject({prevX + a, prevY + b, 200}, r, i % 10 + 1);
+    SpawnObject({prevX + a, prevY + b, 200}, r, i % 18 + 1);
   }
 
   float angleCos = std::cos((ang - 180) * PI / 180.0);
@@ -299,6 +304,21 @@ void AMyActor2::Spawning(int count, FVector v, float ang)
   float a = std::sqrt(std::pow(distance, 2) - std::pow(b, 2));
   //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Orange, FString::Printf(TEXT("Angle is: %s"), log.ToString()));
   GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("a=%f b=%f angleCos=%f"), a, b, angleCos));
+}
+
+void AMyActor2::SpawnGraphFromBP(FString input)
+{
+  tie(graph, decodeInfo) = ParseMolecule(TCHAR_TO_UTF8(*input));
+  // NewMolecule();
+  TArray<bool> b;
+  b.SetNum(graph.size());
+  TArray<int> m;
+  m.SetNum(graph.size());
+  TArray<AActor *> e;
+  e.SetNum(graph.size());
+  SpawnGraph(-1, 0, b, m, e);
+  nOfGraph += 1;
+  GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("decodeInfo.size()=%i"), decodeInfo.size()));
 }
 
 void AMyActor2::NewMolecule_Implementation()
@@ -364,18 +384,18 @@ void AMyActor2::Tick(float DeltaTime)
   std::string moleculeInp(TCHAR_TO_UTF8(*S.GetValueOnGameThread()));
   if (prev != moleculeInp && moleculeInp != "-" && isStarted)
   {
-    UE_LOG(LogTemp, Warning, TEXT("Console variable is here"));
+    //UE_LOG(LogTemp, Warning, TEXT("Console variable is here"));
     tie(graph, decodeInfo) = ParseMolecule(moleculeInp);
     // NewMolecule();
     TArray<bool> b;
     b.SetNum(graph.size());
     TArray<int> m;
     m.SetNum(graph.size());
-    TArray<AActor*> e;
+    TArray<AActor *> e;
     e.SetNum(graph.size());
     SpawnGraph(-1, 0, b, m, e);
     nOfGraph += 1;
-    GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("decodeInfo.size()=%i"), decodeInfo.size() + 0.f));
+    GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Orange, FString::Printf(TEXT("decodeInfo.size()=%i"), decodeInfo.size()));
     // size_t -> bp -> for each index get TArray
     // BuildMolecule(arr);
     prev = moleculeInp;
