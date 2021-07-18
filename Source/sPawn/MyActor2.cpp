@@ -79,7 +79,7 @@ std::vector<FString> elementMaterialPath = {
 
 };
 
-std::vector<std::string> atomName = {
+std::vector<std::string> atomNames = {
     "",
     "H",
     "He",
@@ -191,30 +191,32 @@ void AMyActor2::RenderAdjacencyList()
 
 int AMyActor2::GetAtomIndexByName(FString atom)
 {
-  for (size_t i = 1; i < atomName.size(); i++)
+  for (size_t i = 1; i < atomNames.size(); i++)
   {
-    if (TCHAR_TO_UTF8(*atom) == atomName[i])
+    if (TCHAR_TO_UTF8(*atom) == atomNames[i])
       return i;
   }
   return -1;
 }
 
 std::vector<std::vector<FVector>> positioning = {
-    {{0, 0, 0}},                                                                                 // 0
-    {{50, 0, 0}},                                                                                // 1
-    {{158.67068543265904, 121.75221130618945, 0}, {158.67068543265904, -121.75221130618945, 0}}, // 2
+    {{0, 0, 0}},                          // 0
+    {{1, 0, 0}},                          // 1
+    {{0.866, 0.6, 0}, {0.866, -0.6, 0}},  // 2
     /* 
     a * sin(0.916298), a * sin(0.654498)
     52.5 deg                  37.5 deg
     angle between those 3 points is 105 deg
     */
-    {{142.2, 100.2, 81.65}, {142.2, -100, 81.65}, {142.2, 0, -81.65}}, // 3
+    {{0, 0, 1}, {1, 0, 0}, {0, 1, 0}},    // 3
     /* 
     a, (a * sqrt(3) + a) / 2, 0
     a, (a * sqrt(3) - a) / 2, 0
     a - (a / (2 * sqrt(3))), a * sqrt(3) / 2, -a * sqrt(6)
     */
-    {{100, 50, 50}, {100, 50, -50}, {100, -50, 50}, {100, -50, -50}}};
+    {{1, 0.5, 0.5}, {100, 0.5, -0.5}, {1, -0.5, 0.5}, {1, -0.5, -0.5}}};
+
+
 
 void AMyActor2::SpawnGraph(int previous, int current, TArray<bool> &visited, TArray<int> &molecule, TArray<AActor *> &elements)
 {
@@ -239,6 +241,15 @@ void AMyActor2::SpawnGraph(int previous, int current, TArray<bool> &visited, TAr
     neighborsCount += 1;
   // Spawn neighbors
   int j = 0;
+  UDataTable *pDataTable = LoadObject<UDataTable>(NULL, UTF8_TO_TCHAR("DataTable'/Game/Data/atomRadiusDataTable.atomRadiusDataTable'"));
+  static const FString ContextString(TEXT("Get AtomRadiusDataTable row"));
+  FString atomName = UTF8_TO_TCHAR(decodeInfo[current].c_str());
+  // UE_LOG(LogTemp, Warning, TEXT(atomName));
+  FAtomRadius* fatomRadius = pDataTable->FindRow<FAtomRadius>(FName(TEXT("Na")), ContextString, true);
+  int atomRadius = 1;
+  if (fatomRadius) {
+    atomRadius = (int)(fatomRadius->radius / 3);  // divide by 2 = one after another, divide by 4 = set on the edge
+  };
   for (int i : graph[current])
   {
     if (visited[i])
@@ -253,7 +264,7 @@ void AMyActor2::SpawnGraph(int previous, int current, TArray<bool> &visited, TAr
            static_cast<int>(positioning[neighborsCount][j].X),
            static_cast<int>(positioning[neighborsCount][j].Y),
            static_cast<int>(positioning[neighborsCount][j].Z));
-    elements[i] = SpawnObject({coordsCurrent.X + positioning[neighborsCount][j].X, coordsCurrent.Y + positioning[neighborsCount][j].Y, coordsCurrent.Z + positioning[neighborsCount][j].Z}, abc, GetAtomIndexByName(UTF8_TO_TCHAR(decodeInfo[i].c_str())));
+    elements[i] = SpawnObject({coordsCurrent.X + positioning[neighborsCount][j].X * atomRadius, coordsCurrent.Y + positioning[neighborsCount][j].Y * atomRadius, coordsCurrent.Z + positioning[neighborsCount][j].Z * atomRadius}, abc, GetAtomIndexByName(UTF8_TO_TCHAR(decodeInfo[i].c_str())));
     SpawnGraph(current, i, visited, molecule, elements);
     j += 1;
   }

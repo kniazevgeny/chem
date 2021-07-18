@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/DataTable.h"
 #include <string>
 #include <map>
 #include <vector>
@@ -17,6 +18,16 @@ struct FVectors
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<int> Vector;
+
+};
+
+USTRUCT(BlueprintType)
+struct FAtomRadius : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int radius;
 };
 
 USTRUCT(BlueprintType)
