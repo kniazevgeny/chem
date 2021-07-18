@@ -214,7 +214,7 @@ std::vector<std::vector<FVector>> positioning = {
     a, (a * sqrt(3) - a) / 2, 0
     a - (a / (2 * sqrt(3))), a * sqrt(3) / 2, -a * sqrt(6)
     */
-    {{1, 0.5, 0.5}, {100, 0.5, -0.5}, {1, -0.5, 0.5}, {1, -0.5, -0.5}}};
+    {{1, 0.5, 0.5}, {1, 0.5, -0.5}, {1, -0.5, 0.5}, {1, -0.5, -0.5}}};
 
 
 
@@ -243,17 +243,20 @@ void AMyActor2::SpawnGraph(int previous, int current, TArray<bool> &visited, TAr
   int j = 0;
   UDataTable *pDataTable = LoadObject<UDataTable>(NULL, UTF8_TO_TCHAR("DataTable'/Game/Data/atomRadiusDataTable.atomRadiusDataTable'"));
   static const FString ContextString(TEXT("Get AtomRadiusDataTable row"));
-  FString atomName = UTF8_TO_TCHAR(decodeInfo[current].c_str());
-  // UE_LOG(LogTemp, Warning, TEXT(atomName));
-  FAtomRadius* fatomRadius = pDataTable->FindRow<FAtomRadius>(FName(TEXT("Na")), ContextString, true);
-  int atomRadius = 1;
-  if (fatomRadius) {
-    atomRadius = (int)(fatomRadius->radius / 3);  // divide by 2 = one after another, divide by 4 = set on the edge
-  };
   for (int i : graph[current])
   {
     if (visited[i])
       continue;
+    FString atomName = UTF8_TO_TCHAR(decodeInfo[current].c_str());
+    FString atomName2 = UTF8_TO_TCHAR(decodeInfo[i].c_str());
+    // UE_LOG(LogTemp, Warning, TEXT(atomName));
+    FAtomRadius* fatomRadius = pDataTable->FindRow<FAtomRadius>(FName(atomName), ContextString, true);
+    FAtomRadius* fatomRadius2 = pDataTable->FindRow<FAtomRadius>(FName(atomName2), ContextString, true);
+    int atomRadius = 10;
+    if (fatomRadius) {
+      atomRadius = fatomRadius->radius;
+      if (fatomRadius2->radius > atomRadius) atomRadius = fatomRadius2->radius;
+    };
     UE_LOG(LogTemp, Warning, TEXT("about to spawn graph[%i]"), i);
     // Get coords of previous
     FVector coordsPrevious = elements[previous]->GetActorLocation();
